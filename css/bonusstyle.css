@@ -53,7 +53,6 @@ thead th {
 .fa-plus {
   color: green;
   padding-left: 10px;
-  font-size: 1.5em;
 }
 
 .fa-times {
@@ -81,6 +80,10 @@ thead th {
   height: 34px;
   padding-top: 4px;
   vertical-align: bottom;
+}
+
+.modal-footer .fa-plus {
+  font-size: 1.5em;
 }
 
 .multicolumn {
