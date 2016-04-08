@@ -1,0 +1,155 @@
+h1 {
+  display:inline;
+}
+
+h3 {
+  margin-top: 5px;
+}
+
+input[type="file"] {
+  display: inline;
+}
+
+input.spinless[type=number]::-webkit-outer-spin-button,
+input.spinless[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input.spinless[type=number] {
+    -moz-appearance:textfield;
+    width: 50px;
+}
+
+label:hover {
+  background: #f5f5f5;
+}
+
+label.strike-when-checked > input:checked + span {
+  text-decoration: line-through;
+}
+
+thead th {
+  background-color: #eee;
+}
+
+.best_suit.fa-plus {
+  color: purple;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.fa-centred {
+  display: block;
+  text-align: center;
+}
+
+.fa-check {
+  color: green;
+}
+
+.fa-plus {
+  color: green;
+  padding-left: 10px;
+  font-size: 1.5em;
+}
+
+.fa-times {
+  color: red;
+  font-size: 2em;
+}
+
+.form-inline > .illions {
+  width: 18em;
+}
+
+.invalid {
+  border: 1px solid red;
+}
+
+.modal-footer {
+  text-align: left;
+}
+
+.modal-footer input {
+  margin-left: 5px;
+}
+
+.modal-footer .fa {
+  height: 34px;
+  padding-top: 4px;
+  vertical-align: bottom;
+}
+
+.multicolumn {
+  -webkit-columns: 23em;
+  -moz-columns: 23em;
+  columns: 23em;
+}
+
+.navbar-inner {
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.176);
+}
+
+.navbar-nav > li > a {
+  cursor: pointer;
+}
+
+.navbar-nav > li > .btn-group button {
+  margin-left: 10px;
+}
+
+.navbar-right > li > button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.page-header {
+  background-color: #6F5499;
+  background-image: linear-gradient(to bottom, #563D7C 0px, #6F5499 100%);
+  background-repeat: repeat-x;
+  color: white;
+  min-height: 110px;
+  padding-top: 45px;
+  width: 100%;
+}
+
+.page-header > p {
+  margin-left: 24px;
+  font-size: 24px;
+}
+
+.page-header > p > .pull-right {
+  margin-right: 15px;
+}
+
+.page-header > p > .pull-right > a {
+  color: white;
+}
+
+.page-header > p > .pull-right > a > i {
+  font-size: 1.5em;
+  margin-left: 10px;
+}
+
+.page-header > p > .small {
+  font-size: 16px;
+}
+
+.rec_header {
+  margin-top: 10px;
+}
+
+.space_below {
+  margin-bottom: 10px;
+}
+
+.space_below_sm {
+  margin-bottom: 5px;
+}
+
+.well > label > .form-control {
+  display: inline;
+}
