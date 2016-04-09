@@ -222,7 +222,7 @@ advApp.factory('FileFactory', ['WorldFactory', function(WorldFactory) {
     }
   }
 
-  function loadCalcSingle(obj) {
+  function loadCalcSingle(name, obj) {
     var i = 0, j = 0, k = 0;
     for (k in WorldFactory.planets) {
       if (obj.hasOwnProperty(WorldFactory.planets[k][0])) {
@@ -230,42 +230,42 @@ advApp.factory('FileFactory', ['WorldFactory', function(WorldFactory) {
           if (obj[WorldFactory.planets[k][0]].levels.hasOwnProperty(i)) {
             for (j = 0; j < WorldFactory.statics[WorldFactory.planets[k][0]].investments.length; j++) {
               if (closeMatch(WorldFactory.statics[WorldFactory.planets[k][0]].investments[j].name, i)) {
-                WorldFactory.worlds[WorldFactory.planets[k][0]].investments[j].level = obj[WorldFactory.planets[k][0]].levels[i];
+                WorldFactory.worlds[name][WorldFactory.planets[k][0]].investments[j].level = obj[WorldFactory.planets[k][0]].levels[i];
                 break;
               }
             }
           }
         }
         WorldFactory.worlds[WorldFactory.planets[k][0]].numAngels = obj[WorldFactory.planets[k][0]].numAngels;
-        WorldFactory.worlds[WorldFactory.planets[k][0]].viewNumAngels = WorldFactory.worlds[WorldFactory.planets[k][0]].numAngels;
+        WorldFactory.worlds[name][WorldFactory.planets[k][0]].viewNumAngels = WorldFactory.worlds[name][WorldFactory.planets[k][0]].numAngels;
         for (i = 0; i < obj[WorldFactory.planets[k][0]].upgradeIndexUpTo; i++) {
-          WorldFactory.worlds[WorldFactory.planets[k][0]].cashUpgrades[i] = true;
+          WorldFactory.worlds[name][WorldFactory.planets[k][0]].cashUpgrades[i] = true;
         }
         for (i = 0; i < obj[WorldFactory.planets[k][0]].angelUpgradeIndexUpTo; i++) {
-          WorldFactory.worlds[WorldFactory.planets[k][0]].angelUpgrades[i][0] = true;
+          WorldFactory.worlds[name][WorldFactory.planets[k][0]].angelUpgrades[i][0] = true;
         }
         for (i = 0; i < obj[WorldFactory.planets[k][0]].upgradeIndexBonus.length; i++) {
-          WorldFactory.worlds[WorldFactory.planets[k][0]].cashUpgrades[obj[WorldFactory.planets[k][0]].upgradeIndexBonus[i]] = true;
+          WorldFactory.worlds[name][WorldFactory.planets[k][0]].cashUpgrades[obj[WorldFactory.planets[k][0]].upgradeIndexBonus[i]] = true;
         }
         for (i = 0; i < obj[WorldFactory.planets[k][0]].angelUpgradeIndexBonus.length; i++) {
-          WorldFactory.worlds[WorldFactory.planets[k][0]].angelUpgrades[obj[WorldFactory.planets[k][0]].angelUpgradeIndexBonus[i]][0] = true;
+          WorldFactory.worlds[name][WorldFactory.planets[k][0]].angelUpgrades[obj[WorldFactory.planets[k][0]].angelUpgradeIndexBonus[i]][0] = true;
         }
         for (i = 0; i < obj[WorldFactory.planets[k][0]].managersBought.length; i++) {
-          WorldFactory.worlds[WorldFactory.planets[k][0]].managerUpgrades[Math.floor(obj[WorldFactory.planets[k][0]].managersBought[i] / 2)][obj[WorldFactory.planets[k][0]].managersBought[i] % 2] = true;
+          WorldFactory.worlds[name][WorldFactory.planets[k][0]].managerUpgrades[Math.floor(obj[WorldFactory.planets[k][0]].managersBought[i] / 2)][obj[WorldFactory.planets[k][0]].managersBought[i] % 2] = true;
         }
-        WorldFactory.worlds[WorldFactory.planets[k][0]].filters.noSingles = obj[WorldFactory.planets[k][0]].noSingles || false;
-        WorldFactory.worlds[WorldFactory.planets[k][0]].filters.noTens = obj[WorldFactory.planets[k][0]].noTens || false;
-        WorldFactory.worlds[WorldFactory.planets[k][0]].triples = obj[WorldFactory.planets[k][0]].triples;
-        WorldFactory.worlds[WorldFactory.planets[k][0]].flux = obj[WorldFactory.planets[k][0]].flux;
-        WorldFactory.worlds[WorldFactory.planets[k][0]].bonusAngelEffectiveness = obj[WorldFactory.planets[k][0]].bonusAngelEffectiveness;
-        WorldFactory.worlds[WorldFactory.planets[k][0]].bonusMultiplier = obj[WorldFactory.planets[k][0]].bonusMultiplier;
+        WorldFactory.worlds[name][WorldFactory.planets[k][0]].filters.noSingles = obj[WorldFactory.planets[k][0]].noSingles || false;
+        WorldFactory.worlds[name][WorldFactory.planets[k][0]].filters.noTens = obj[WorldFactory.planets[k][0]].noTens || false;
+        WorldFactory.worlds[name][WorldFactory.planets[k][0]].triples = obj[WorldFactory.planets[k][0]].triples;
+        WorldFactory.worlds[name][WorldFactory.planets[k][0]].flux = obj[WorldFactory.planets[k][0]].flux;
+        WorldFactory.worlds[name][WorldFactory.planets[k][0]].bonusAngelEffectiveness = obj[WorldFactory.planets[k][0]].bonusAngelEffectiveness;
+        WorldFactory.worlds[name][WorldFactory.planets[k][0]].bonusMultiplier = obj[WorldFactory.planets[k][0]].bonusMultiplier;
         if (angular.isDefined(obj[WorldFactory.planets[k][0]].megaTicket)) {
           for (i = 0; i < obj[WorldFactory.planets[k][0]].megaTicket.length; i++) {
-            WorldFactory.worlds[WorldFactory.planets[k][0]].investments[obj[WorldFactory.planets[k][0]].megaTicket[i]].golden = true;
+            WorldFactory.worlds[name][WorldFactory.planets[k][0]].investments[obj[WorldFactory.planets[k][0]].megaTicket[i]].golden = true;
           }
         }
       }
-      WorldFactory.calc(WorldFactory.worlds[WorldFactory.planets[k][0]]);
+      WorldFactory.calc(WorldFactory.worlds[name][WorldFactory.planets[k][0]]);
     }
   }
 
@@ -279,15 +279,14 @@ advApp.factory('FileFactory', ['WorldFactory', function(WorldFactory) {
           WorldFactory.setProfile(p);
           name = p;
         }
-        loadCalcSingle(name, obj, type);
+        loadCalcSingle(name, obj);
       }
     } else {
       name = 'Main';
       WorldFactory.loadProfile(name);
       WorldFactory.setProfile(name);
-      loadCalcSingle(name, obj, type);
+      loadCalcSingle(name, obj);
     }
-    console.log(WorldFactory.worlds);
     return name;
   };
 
