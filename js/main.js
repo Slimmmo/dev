@@ -323,37 +323,54 @@ advApp.factory('FileFactory', ['WorldFactory', function(WorldFactory) {
           temp[oidx++] = temp[reference++];
         } while ((--len) >= 0);
       }
-    } while (iidx < $scope.lzfData.length);
+    } while (iidx < str.length);
     return temp.join("");
   }
 
-  FileFactory.loadGame = function() {
-    var obj = JSON.parse(lzf_decode(atob(str))), i, id = 0;
-    var loc = WorldFactory.getWorldFromName(obj.planetName);
-    for (i in obj.ventures) {
-      id = WorldFactory.indexFromID(loc, i.id);
-      loc.investments[id][1] = i.numOwned;
-      loc.investments[id][2] = i.isBoosted;
+  FileFactory.loadGame = function(str) {
+    var b64 = sanitize(str).substring(1).split("|")[0],
+    obj = JSON.parse(lzf_decode(atob(b64))), i, id = 0,
+    loc = WorldFactory.getWorldFromName(obj.planetName);
+    console.log(obj);
+    for (i = 0; i < obj.ventures.length; i++) {
+      id = WorldFactory.indexFromID(loc, obj.ventures[i].id);
+      loc.investments[id].level = obj.ventures[i].numOwned;
+      loc.investments[id].golden = obj.ventures[i].isBoosted;
     }
-    for (i in obj.upgrades) {
-      id = WorldFactory.indexFromID(loc, i.id);
-      if (i.id.indexOf("_angel_") != -1) {
-        loc.angelUpgrades[id][3] = i.purchased;
+    var angelID = 0; // how else can we do this without keeping track of the angel_sac_x or swap_x ids?
+    for (i = 0; i < obj.upgrades.length; i++) {
+      if (obj.upgrades[i].id.indexOf("angel") !== -1 || obj.upgrades[i].id.indexOf("swap") !== -1) {
+        loc.angelUpgrades[angelID++][0] = obj.upgrades[i].purchased;
       } else {
-        loc.cashUpgrades[id][2] = i.purchased;
+        //loc.cashUpgrades[i - angelID] = obj.upgrades[i].purchased;
       }
     }
-    for (i in obj.upgrades) {
-      if (i.id.indexof("_accountant" != -1)) {
-        id = WorldFactory.indexFromID(loc, i.id);
-        loc.managerUpgrades[id][(i.id.charAt(i.id.length - 1) != '2') ? 0 : 1][1] = i.purchased;
+    for (i = 0; i < obj.managers.length; i++) {
+      if (obj.managers[i].id.indexOf("_accountant") !== -1) {
+        id = WorldFactory.indexFromID(loc, obj.managers[i].id);
+        loc.managerUpgrades[id][(obj.managers[i].id.charAt(obj.managers[i].id.length - 1) != '2') ? 0 : 1][1] = obj.managers[i].purchased;
       }
     }
     loc.lifetimeEarnings = obj.totalCash || obj.sessionCash + obj.totalPreviousCash;
     loc.numAngels = obj.angelInvestors;
     loc.sacAngels = obj.angelInvestorsSpent;
     // how to find gold multipliers, flux, bonus angel effectiveness (kong login etc), suits
+    console.log(loc);
   };
+
+  function sanitize(str) {
+    var ret = '';
+    for (var c = 0; c < str.length; c++) {
+      if (str[c] === '.' || str[c] === '+' || str[c] === '/' || str[c] === '=' || str[c] === '|') {
+        ret += str[c];
+      } else if ((str[c] >= 'a' && str[c] <= 'z') || (str[c] >= 'A' && str[c] <= 'Z')) {
+        ret += str[c];
+      } else if (str[c] >= '0' && str[c] <= '9') {
+        ret += str[c];
+      }
+    }
+    return ret;
+  }
 
   FileFactory.save = function() {
     localStorage.setItem('profiles', FileFactory.getJSON());
@@ -861,16 +878,26 @@ advApp.factory('WorldFactory', ['$filter', 'FilterFactory', function($filter, Fi
   }
 
   WorldFactory.getWorldFromName = function(name) {
-    if (name.toLowerCase() in WorldFactory.worlds[profile]) {
-      return WorldFactory.worlds[profile][name.toLowerCase()];
+    if (name.toLowerCase() in WorldFactory.worlds[currProfile]) {
+      return WorldFactory.worlds[currProfile][name.toLowerCase()];
     } else {
-      return WorldFactory.worlds[profile][WorldFactory.planets.length - 1];
+      return WorldFactory.worlds[currProfile][WorldFactory.planets.length - 1];
     }
   };
 
   WorldFactory.indexFromID = function(loc, id) {
+    if (id.indexOf('_') !== -1) {
+      id = id.split('_')[0];
+    }
     var i = 0;
-    for (; i < WorldFactory.statics[loc.name].investments; i++) {
+    if (id === 'global') {
+      return WorldFactory.statics[loc.name].investments.length;
+    } else if (id === 'angel') {
+      return WorldFactory.statics[loc.name].investments.length + 1;
+    } else if (id === 'carwash') {
+      id = 'car';
+    }
+    for (; i < WorldFactory.statics[loc.name].investments.length; i++) {
       if (WorldFactory.statics[loc.name].investments[i].id === id) {
         return i;
       }
@@ -1214,7 +1241,7 @@ advApp.controller('advController', ['$document', '$scope', '$uibModal', 'FileFac
       var file = fileInputG.files[0],
       reader = new FileReader();
       reader.onload = function(e) {
-        FileFactory.loadCalculator(e.target.result);
+        FileFactory.loadGame(e.target.result);
         $scope.ref = WorldFactory.worlds['Main']['earth'];
         $scope.$digest();
       }
