@@ -25,6 +25,11 @@ label:hover {
   background: #f5f5f5;
 }
 
+label.btn-primary {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 label.strike-when-checked > input:checked + span {
   text-decoration: line-through;
 }
