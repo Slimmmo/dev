@@ -324,7 +324,7 @@ advApp.factory('FileFactory', ['WorldFactory', function(WorldFactory) {
         } while ((--len) >= 0);
       }
     } while (iidx < str.length);
-    return temp.join("");
+    return temp.join("").substring(0, oidx);
   }
 
   FileFactory.loadGame = function(str) {
